@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">PokeDex</string>
+    <string name="background_image">Background Image</string>
+    <string name="search">Search</string>
+    <string name="weight_in_lbs">%1$s lbs</string>
+    <string name="pokemon_background">Pokemon Background</string>
+    <string name="back">Back</string>
+    <string name="selected_image">Selected Image</string>
+    <string name="add_pokemon">Add Pokemon</string>
+    <string name="pokemon_added">Pokemon Added!</string>
+    <string name="please_select_an_image">Please select an image</string>
+    <string name="please_fill_all_fields">Please fill all fields</string>
+    <string name="category">Category</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="type">Type</string>
+    <string name="update_pokemon">Update Pokemon</string>
+</resources>
