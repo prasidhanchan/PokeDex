@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pika.pokedex.R
 import com.pika.pokedex.domain.models.Pokemon
+import com.pika.pokedex.presentation.components.PokeButton
 
 /**
  * Pokemon Bottom sheet composable to display the details of the selected Pokemon
@@ -43,7 +44,8 @@ import com.pika.pokedex.domain.models.Pokemon
 fun DetailsSheet(
     modifier: Modifier = Modifier,
     pokemon: Pokemon,
-    visible: Boolean
+    visible: Boolean,
+    onUpdatePressed: () -> Unit
 ) {
     AnimatedVisibility(
         visible = visible,
@@ -69,9 +71,8 @@ fun DetailsSheet(
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(vertical = 80.dp, horizontal = 30.dp)
-                        .fillMaxSize()
-                        .fillMaxHeight(0.5f),
+                        .padding(top = 80.dp, start = 30.dp, end = 30.dp)
+                        .fillMaxSize(),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.Start
                 ) {
@@ -157,6 +158,15 @@ fun DetailsSheet(
                             }
                         }
                     )
+                    
+                    PokeButton(
+                        modifier = Modifier
+                            .padding(top = 20.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxWidth(0.8f),
+                        text = stringResource(id = R.string.update_pokemon),
+                        onClick = onUpdatePressed
+                    )
                 }
                 Text(
                     modifier = Modifier
@@ -192,6 +202,7 @@ private fun DetailsSheetPreview() {
             height = "1'04",
             weight = "13.2"
         ),
-        visible = true
+        visible = true,
+        onUpdatePressed = { }
     )
 }

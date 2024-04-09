@@ -26,7 +26,6 @@ class HomeViewModel @Inject constructor(
     /**
      * Function to get all Pokemon from API
      */
-
     fun getAllPokemon() {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {

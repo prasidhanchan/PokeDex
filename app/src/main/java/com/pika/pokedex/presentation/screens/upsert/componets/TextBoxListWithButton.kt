@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.pika.pokedex.R
-import com.pika.pokedex.domain.models.Pokemon
 import com.pika.pokedex.presentation.components.PokeButton
 import com.pika.pokedex.presentation.components.PokeTextBox
 import com.pika.pokedex.presentation.screens.upsert.UiState
@@ -33,7 +32,6 @@ import com.pika.pokedex.presentation.screens.upsert.UiState
 /**
  * Animated TextBox composable that displays list of [PokeTextBox] vertically
  * @param visible Visibility of the TextBoxes
- * @param pokemon Requires a [Pokemon]
  * @param uiState Requires [UiState]
  * @param onValueChangeName on value change lambda of the name triggered when name value is changed
  * @param onValueChangeDes on value change lambda of the description triggered when description value is changed
@@ -45,7 +43,6 @@ import com.pika.pokedex.presentation.screens.upsert.UiState
 @Composable
 fun TextBoxListWithButton(
     visible: Boolean,
-    pokemon: Pokemon?,
     uiState: UiState,
     onValueChangeName: (String) -> Unit,
     onValueChangeDes: (String) -> Unit,
@@ -88,14 +85,14 @@ fun TextBoxListWithButton(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PokeTextBox(
-                    text = pokemon?.name ?: uiState.nameState,
+                    text = uiState.nameState,
                     onValueChange = onValueChangeName,
                     placeHolder = stringResource(R.string.name),
                     onFinish = { focusManager.moveFocus(FocusDirection.Next) }
                 )
 
                 PokeTextBox(
-                    text = pokemon?.description ?: uiState.descriptionState,
+                    text = uiState.descriptionState,
                     onValueChange = onValueChangeDes,
                     placeHolder = stringResource(R.string.description),
                     singleLine = false,
@@ -103,28 +100,28 @@ fun TextBoxListWithButton(
                 )
 
                 PokeTextBox(
-                    text = pokemon?.type ?: uiState.typeState,
+                    text = uiState.typeState,
                     onValueChange = onValueChangeType,
                     placeHolder = stringResource(R.string.type),
                     onFinish = { focusManager.moveFocus(FocusDirection.Next) }
                 )
 
                 PokeTextBox(
-                    text = pokemon?.category ?: uiState.categoryState,
+                    text = uiState.categoryState,
                     onValueChange = onValueChangeCategory,
                     placeHolder = stringResource(id = R.string.category),
                     onFinish = { focusManager.moveFocus(FocusDirection.Next) }
                 )
 
                 PokeTextBox(
-                    text = pokemon?.height ?: uiState.heightState,
+                    text = uiState.heightState,
                     onValueChange = onValueChangeHeight,
                     placeHolder = stringResource(id = R.string.height),
                     onFinish = { focusManager.moveFocus(FocusDirection.Next) }
                 )
 
                 PokeTextBox(
-                    text = pokemon?.weight ?: uiState.weightState,
+                    text = uiState.weightState,
                     onValueChange = onValueChangeWeight,
                     placeHolder = stringResource(id = R.string.weight),
                     imeAction = ImeAction.Done,
@@ -135,7 +132,7 @@ fun TextBoxListWithButton(
                 )
 
                 PokeButton(
-                    text = if (pokemon?._id != null)
+                    text = if (uiState.idState != null)
                         stringResource(R.string.update_pokemon) else
                         stringResource(id = R.string.add_pokemon),
                     enabled = !uiState.loading,

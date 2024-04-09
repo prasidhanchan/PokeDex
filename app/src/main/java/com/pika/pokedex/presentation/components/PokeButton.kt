@@ -2,9 +2,10 @@ package com.pika.pokedex.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -22,35 +23,43 @@ import com.pika.pokedex.domain.util.Constants.blue
  * @param modifier Requires a [Modifier]
  * @param text Requires the button Text
  * @param enabled When false Button will be disabled
- * @param onClick The on CLick lambda of triggered on click of the button
+ * @param onClick The on Click lambda of triggered on click of the button
  */
 @Composable
 fun PokeButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     text: String,
+    color: Color = blue,
     onClick: () -> Unit
 ) {
     TextButton(
         modifier = modifier
-            .padding(vertical = 20.dp)
             .fillMaxWidth()
             .height(60.dp),
         onClick = onClick,
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = blue
+            containerColor = color
         ),
         enabled = enabled
     ) {
-        Text(
-            text = text,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
+        if (enabled) {
+            Text(
+                text = text,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
             )
-        )
+        } else {
+            CircularProgressIndicator(
+                modifier = Modifier.size(30.dp),
+                color = Color.White,
+                strokeWidth = 2.dp
+            )
+        }
     }
 }
 

@@ -8,13 +8,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.pika.pokedex.R
 import com.pika.pokedex.domain.models.Pokemon
+import com.pika.pokedex.presentation.components.PokeDialog
 import com.pika.pokedex.presentation.screens.details.components.DetailsSheet
 import com.pika.pokedex.presentation.screens.details.components.DetailsTopBar
 
@@ -22,8 +29,12 @@ import com.pika.pokedex.presentation.screens.details.components.DetailsTopBar
 fun DetailsScreen(
     visible: Boolean,
     pokemon: Pokemon,
-    onBackPressed: () -> Unit
+    onDeletePressed: () -> Unit,
+    onUpdatePressed: () -> Unit,
+    onBackPressed: () -> Unit,
 ) {
+    var isDialogVisible by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(pokemon.color?.substring(2)?.toLong(16)!!)
@@ -39,17 +50,19 @@ fun DetailsScreen(
             ) {
                 DetailsTopBar(
                     visible = visible,
-                    _id = pokemon._id!!,
+                    id = pokemon._id!!,
                     name = pokemon.name!!,
                     type = pokemon.type!!,
                     category = pokemon.category!!,
+                    onDeletePressed = { isDialogVisible = true },
                     onBackPressed = onBackPressed
                 )
             }
 
             DetailsSheet(
                 pokemon = pokemon,
-                visible = visible
+                visible = visible,
+                onUpdatePressed = onUpdatePressed
             )
 
             AsyncImage(
@@ -62,11 +75,22 @@ fun DetailsScreen(
             )
         }
     }
+
+    PokeDialog(
+        visible = isDialogVisible,
+        title = stringResource(R.string.delete_pokemon),
+        subTitle = stringResource(R.string.delete_pokemon_message),
+        onConfirm = {
+            onDeletePressed()
+            isDialogVisible = false
+        },
+        onDismiss = { isDialogVisible = false }
+    )
 }
 
 @Preview
 @Composable
-private fun DetailsScreenContentPreview() {
+private fun DetailsScreenPreview() {
     DetailsScreen(
         visible = true,
         pokemon = Pokemon(
@@ -80,6 +104,8 @@ private fun DetailsScreenContentPreview() {
             weight = "15.2",
             color = "0XFF24CC43"
         ),
+        onDeletePressed = { },
+        onUpdatePressed = { },
         onBackPressed = { }
     )
 }

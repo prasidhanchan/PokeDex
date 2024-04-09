@@ -78,7 +78,7 @@ fun PokemonCard(
             modifier = modifier
                 .padding(vertical = 5.dp, horizontal = 10.dp)
                 .fillMaxWidth()
-                .height(165.dp)
+                .height(160.dp)
                 .animateContentSize(
                     animationSpec = tween(durationMillis = 1000)
                 )

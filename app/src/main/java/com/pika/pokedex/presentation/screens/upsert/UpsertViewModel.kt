@@ -63,6 +63,63 @@ class UpsertViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Function to update Pokemon available in API
+     * @param onSuccess on Success lambda triggered when Pokemon is updated successfully
+     * @param onError on Error lambda triggered when there is a error while updating a Pokemon
+     */
+    fun updatePokemon(
+        id: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            if (!uiState.value.imageState?.contains("firebase")!!) {
+                val fbResult = repository.convertToUrl(
+                    uri = uiState.value.imageState?.toUri()!!,
+                    name = uiState.value.nameState
+                )
+
+                delay(800L)
+                if (fbResult.e == null) uiState.update { it.copy(imageState = fbResult.data) } // Updating to FB url
+            }
+
+            val pokemon = Pokemon(
+                _id = id,
+                name = uiState.value.nameState,
+                description = uiState.value.descriptionState,
+                type = uiState.value.typeState,
+                category = uiState.value.categoryState,
+                height = uiState.value.heightState,
+                weight = uiState.value.weightState,
+                image = uiState.value.imageState,
+                color = uiState.value.colorState
+            )
+
+            val result = repository.updatePokemon(
+                id = id,
+                pokemon = pokemon
+            )
+
+            withContext(Dispatchers.Main) {
+                if (result.data == SuccessOrError.SUCCESS && !result.loading!!) {
+                    onSuccess()
+                    uiState.update { it.copy(loading = false) }
+                } else {
+                    onError(result.e?.message.toString())
+                    uiState.update {
+                        it.copy(loading = false)
+                    }
+                }
+            }
+        }
+    }
+
+    fun setId(value: String) {
+        uiState.update { it.copy(idState = value) }
+    }
+
     fun setName(value: String) {
         uiState.update { it.copy(nameState = value) }
     }

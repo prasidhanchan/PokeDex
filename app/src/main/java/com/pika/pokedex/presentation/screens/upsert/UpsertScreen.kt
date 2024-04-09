@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.pika.pokedex.domain.models.Pokemon
 import com.pika.pokedex.presentation.screens.upsert.componets.TextBoxListWithButton
 import com.pika.pokedex.presentation.screens.upsert.componets.ColorPalette
 import com.pika.pokedex.presentation.screens.upsert.componets.ImagePlaceHolder
@@ -24,7 +23,6 @@ import com.pika.pokedex.presentation.screens.upsert.componets.UpsertTopBar
 @Composable
 fun UpsertScreen(
     visible: Boolean,
-    pokemon: Pokemon?,
     uiState: UiState,
     onValueChangeName: (String) -> Unit,
     onValueChangeDes: (String) -> Unit,
@@ -54,9 +52,11 @@ fun UpsertScreen(
         Color(0XFF7A6D6D),
     )
 
+    val selectedColor = uiState.colorState.substring(2).toLong(16)
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color(uiState.colorState.substring(2).toLong(16))
+        containerColor = Color(selectedColor)
     ) { innerPadding ->
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -88,7 +88,7 @@ fun UpsertScreen(
                 ColorPalette(
                     visible = visible,
                     colorList = colorList,
-                    selectedColor = Color(uiState.colorState.substring(2).toLong(16)),
+                    selectedColor = Color(selectedColor),
                     onSelectColor = { color ->
                         onValueChangeColor(color)
                     }
@@ -97,7 +97,6 @@ fun UpsertScreen(
 
             TextBoxListWithButton(
                 visible = visible,
-                pokemon = pokemon,
                 uiState = uiState,
                 onValueChangeName = onValueChangeName,
                 onValueChangeDes = onValueChangeDes,
@@ -113,10 +112,9 @@ fun UpsertScreen(
 
 @Preview
 @Composable
-private fun UpsertScreenContentPreview() {
+private fun UpsertScreenPreview() {
     UpsertScreen(
         visible = true,
-        pokemon = null,
         uiState = UiState(),
         onValueChangeName = { },
         onValueChangeDes = { },
@@ -126,7 +124,6 @@ private fun UpsertScreenContentPreview() {
         onValueChangeWeight = { },
         onValueChangeColor = { },
         onValueChangeImage = { },
-        onButtonPressed = { },
-        onBackPressed = { }
-    )
+        onButtonPressed = { }
+    ) { }
 }

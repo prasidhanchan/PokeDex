@@ -92,7 +92,7 @@ fun HomeScreen(
 
 @Preview
 @Composable
-private fun HomeScreenContentPreview() {
+private fun HomeScreenPreview() {
     HomeScreen(
         visible = true,
         uiState = UiState(

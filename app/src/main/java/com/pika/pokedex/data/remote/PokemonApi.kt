@@ -6,8 +6,11 @@ import com.pika.pokedex.domain.models.Pokemon
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import javax.inject.Singleton
 
 @Singleton
@@ -17,4 +20,10 @@ interface PokemonApi {
 
     @POST(value = "add-pokemon?key=${AUTH_KEY}")
     suspend fun addPokemon(@Body pokemon: Pokemon): Response<ResponseBody>
+
+    @PATCH(value = "update-pokemon/{id}?key=${AUTH_KEY}")
+    suspend fun updatePokemon(@Path("id") id: String, @Body pokemon: Pokemon): Response<ResponseBody>
+
+    @DELETE(value = "remove-pokemon/{id}?key=${AUTH_KEY}")
+    suspend fun removePokemon(@Path("id") id: String): Response<ResponseBody>
 }

@@ -17,4 +17,10 @@
     <string name="description">Description</string>
     <string name="type">Type</string>
     <string name="update_pokemon">Update Pokemon</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_pokemon">Delete Pokemon?</string>
+    <string name="delete_pokemon_message">Are you sure you want to delete this pokemon?</string>
+    <string name="pokemon_removed">Pokemon removed!</string>
+    <string name="pokemon_updated">Pokemon updated!</string>
 </resources>

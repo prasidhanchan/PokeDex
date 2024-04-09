@@ -1,6 +1,7 @@
 package com.pika.pokedex.presentation.screens.upsert
 
 data class UiState(
+    var idState: String? = null,
     var nameState: String = "",
     var descriptionState: String = "",
     var typeState: String = "",

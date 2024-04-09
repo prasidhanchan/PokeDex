@@ -34,7 +34,7 @@ import com.pika.pokedex.presentation.components.CardBubble
 
 /**
  * Details TopBar composable for Details Screen
- * @param _id Requires selected Pokemon id
+ * @param id Requires selected Pokemon id
  * @param name Requires name of the selected Pokemon
  * @param type Requires Pokemon type
  * @param category Requires Pokemon category
@@ -43,10 +43,11 @@ import com.pika.pokedex.presentation.components.CardBubble
 @Composable
 fun DetailsTopBar(
     visible: Boolean,
-    _id: String,
+    id: String,
     name: String,
     type: String,
     category: String,
+    onDeletePressed: () -> Unit,
     onBackPressed: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -63,7 +64,7 @@ fun DetailsTopBar(
                 .fillMaxWidth()
                 .padding(vertical = 30.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Icon(
                 modifier = Modifier.clickable(
@@ -74,6 +75,17 @@ fun DetailsTopBar(
                 painter = painterResource(id = R.drawable.back),
                 tint = Color.White,
                 contentDescription = stringResource(R.string.back)
+            )
+
+            Icon(
+                modifier = Modifier.clickable(
+                    indication = null,
+                    interactionSource = interactionSource,
+                    onClick = onDeletePressed
+                ),
+                painter = painterResource(id = R.drawable.delete),
+                tint = Color.White,
+                contentDescription = "Delete Pokemon"
             )
         }
 
@@ -103,7 +115,7 @@ fun DetailsTopBar(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "#$_id",
+                    text = "#$id",
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
@@ -134,10 +146,11 @@ fun DetailsTopBar(
 private fun DetailsTopBarPreview() {
     DetailsTopBar(
         visible = true,
-        _id = "66112f054178e032a297fc54",
+        id = "66112f054178e032a297fc54",
         name = "Pikachu",
         type = "Electric",
         category = "Mouse",
+        onDeletePressed = { },
         onBackPressed = { }
     )
 }

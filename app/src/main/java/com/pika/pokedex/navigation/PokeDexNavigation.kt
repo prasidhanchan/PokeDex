@@ -12,6 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +21,7 @@ import androidx.navigation.navArgument
 import com.pika.pokedex.R
 import com.pika.pokedex.domain.models.Pokemon
 import com.pika.pokedex.presentation.screens.details.DetailsScreen
+import com.pika.pokedex.presentation.screens.details.DetailsViewModel
 import com.pika.pokedex.presentation.screens.home.HomeScreen
 import com.pika.pokedex.presentation.screens.home.HomeViewModel
 import com.pika.pokedex.presentation.screens.upsert.UpsertScreen
@@ -49,7 +51,7 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                 navigateToDetailsWithArgs = { pokemon ->
                     val encodedUrl = Uri.encode(pokemon.image)
                     navController.navigate(
-                        Routes.DETAILSSCREEN.name +
+                        route = Routes.DETAILSSCREEN.name +
                                 "/${pokemon._id}/${pokemon.name}/${pokemon.description}" +
                                 "/${pokemon.type}/${pokemon.category}/${pokemon.height}" +
                                 "/${pokemon.weight}/${encodedUrl}/${pokemon.color}"
@@ -60,9 +62,9 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
         }
 
         composable(
-            route = "${Routes.DETAILSSCREEN.name}/{_id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
+            route = "${Routes.DETAILSSCREEN.name}/{id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
             arguments = listOf(
-                navArgument("_id") {
+                navArgument("id") {
                     type = NavType.StringType
                 },
                 navArgument("name") {
@@ -91,10 +93,13 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                 }
             )
         ) { backStack ->
-            val _id = backStack.arguments?.getString("_id")
+            val viewModel: DetailsViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+
+            val id = backStack.arguments?.getString("id")
             val name = backStack.arguments?.getString("name")
             val description = backStack.arguments?.getString("description")
-            val type = backStack.arguments?.getString("_id")
+            val type = backStack.arguments?.getString("type")
             val category = backStack.arguments?.getString("category")
             val height = backStack.arguments?.getString("height")
             val weight = backStack.arguments?.getString("weight")
@@ -102,7 +107,7 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
             val color = backStack.arguments?.getString("color")
 
             val pokemon = Pokemon(
-                _id = _id,
+                _id = id,
                 name = name!!,
                 description = description!!,
                 type = type!!,
@@ -120,17 +125,49 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                 visible = true
             }
 
+            val context = LocalContext.current
+
             DetailsScreen(
                 visible = visible,
                 pokemon = pokemon,
+                onDeletePressed = {
+                    viewModel.removePokemon(
+                        id = id!!,
+                        name = name,
+                        onSuccess = {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.pokemon_removed),
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            viewModelHome.getAllPokemon()
+                            navController.popBackStack()
+                        },
+                        onError = { error ->
+                            Toast.makeText(
+                                context,
+                                error,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    )
+                },
+                onUpdatePressed = {
+                    val encodedUrl = Uri.encode(image)
+                    navController.navigate(
+                        route = Routes.UPSERTSCREEN.name +
+                                "?/${id}/${name}/${description}/${type}/${category}/${height}/${weight}/${encodedUrl}/${color}"
+                    )
+                },
                 onBackPressed = { navController.popBackStack() }
             )
         }
 
         composable(
-            route = "${Routes.UPSERTSCREEN.name}?/{_id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
+            route = "${Routes.UPSERTSCREEN.name}?/{id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
             arguments = listOf(
-                navArgument("_id") {
+                navArgument("id") {
                     type = NavType.StringType
                     nullable = true
                 },
@@ -171,10 +208,10 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
             val viewModel: UpsertViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
 
-            val _id = backStack.arguments?.getString("_id")
+            val id = backStack.arguments?.getString("id")
             val name = backStack.arguments?.getString("name")
             val description = backStack.arguments?.getString("description")
-            val type = backStack.arguments?.getString("_id")
+            val type = backStack.arguments?.getString("type")
             val category = backStack.arguments?.getString("category")
             val height = backStack.arguments?.getString("height")
             val weight = backStack.arguments?.getString("weight")
@@ -182,15 +219,15 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
             val color = backStack.arguments?.getString("color")
 
             val pokemon = Pokemon(
-                _id = _id,
-                name = name,
-                description = description,
-                type = type,
-                category = category,
-                height = height,
-                weight = weight,
-                image = image,
-                color = color
+                _id = id,
+                name = uiState.nameState,
+                description = uiState.descriptionState,
+                type = uiState.typeState,
+                category = uiState.categoryState,
+                height = uiState.heightState,
+                weight = uiState.weightState,
+                image = uiState.imageState,
+                color = uiState.colorState
             )
 
             val context = LocalContext.current
@@ -202,9 +239,22 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                 visible = true
             }
 
+            LaunchedEffect(key1 = Unit) {
+                if (!id.isNullOrBlank()) {
+                    viewModel.setId(value = id)
+                    viewModel.setName(value = name!!)
+                    viewModel.setDescription(value = description!!)
+                    viewModel.setType(value = type!!)
+                    viewModel.setCategory(value = category!!)
+                    viewModel.setHeight(value = height!!)
+                    viewModel.setWeight(value = weight!!)
+                    viewModel.setImage(value = Uri.decode(image)!!)
+                    viewModel.setColor(value = color!!)
+                }
+            }
+
             UpsertScreen(
                 visible = visible,
-                pokemon = pokemon,
                 uiState = uiState,
                 onValueChangeName = { viewModel.setName(value = it) },
                 onValueChangeDes = { viewModel.setDescription(value = it) },
@@ -216,7 +266,30 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                 onValueChangeImage = { viewModel.setImage(value = it) },
                 onButtonPressed = {
                     if (pokemon._id != null) {
-                        //TODO Update Pokemon
+                        viewModel.updatePokemon(
+                            id = id!!,
+                            onSuccess = {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.pokemon_updated),
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                navController.navigate(Routes.HOMESCREEN.name) {
+                                    navController.graph.findStartDestination().route?.let { route ->
+                                        popUpTo(route)
+                                    }
+                                }
+                                viewModelHome.getAllPokemon()
+                            },
+                            onError = { error ->
+                                Toast.makeText(
+                                    context,
+                                    error,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        )
                     } else {
                         if (uiState.nameState.isNotEmpty() &&
                             uiState.descriptionState.isNotEmpty() &&
@@ -234,6 +307,7 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                                             context.getString(R.string.pokemon_added),
                                             Toast.LENGTH_LONG
                                         ).show()
+
                                         navController.popBackStack()
                                         viewModelHome.getAllPokemon()
                                     },
@@ -256,9 +330,8 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                             ).show()
                         }
                     }
-                },
-                onBackPressed = { navController.popBackStack() }
-            )
+                }
+            ) { navController.popBackStack() }
         }
     }
 }
