@@ -15,8 +15,11 @@ import javax.inject.Singleton
 
 @Singleton
 interface PokemonApi {
-    @GET(value = "get-all-pokemon?size=10&sort=name")
-    suspend fun getAllPokemon(): Content
+    @GET(value = "get-all-pokemon?size=20&sort=name")
+    suspend fun getAllPokemon(): Response<Content>
+
+    @GET(value = "get-pokemon/{name}")
+    suspend fun getPokemonByName(@Path("name") name: String): Response<List<Pokemon>>
 
     @POST(value = "add-pokemon?key=${AUTH_KEY}")
     suspend fun addPokemon(@Body pokemon: Pokemon): Response<ResponseBody>

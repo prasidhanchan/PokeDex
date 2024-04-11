@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pika.pokedex.domain.util.Constants.blue
+import com.pika.pokedex.presentation.ui.theme.mPlus
 
 /**
  * PokeButton composable created from [TextButton]
@@ -49,7 +50,8 @@ fun PokeButton(
                 text = text,
                 style = TextStyle(
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = mPlus,
                     color = Color.White
                 )
             )
@@ -57,7 +59,7 @@ fun PokeButton(
             CircularProgressIndicator(
                 modifier = Modifier.size(30.dp),
                 color = Color.White,
-                strokeWidth = 2.dp
+                strokeWidth = 3.dp
             )
         }
     }

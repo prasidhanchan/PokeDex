@@ -6,10 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -24,45 +21,54 @@ import com.pika.pokedex.presentation.screens.details.DetailsScreen
 import com.pika.pokedex.presentation.screens.details.DetailsViewModel
 import com.pika.pokedex.presentation.screens.home.HomeScreen
 import com.pika.pokedex.presentation.screens.home.HomeViewModel
+import com.pika.pokedex.presentation.screens.splash.SplashScreen
 import com.pika.pokedex.presentation.screens.upsert.UpsertScreen
 import com.pika.pokedex.presentation.screens.upsert.UpsertViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
     val navController = rememberNavController()
 
     NavHost(
-        startDestination = Routes.HOMESCREEN.name,
+        startDestination = Routes.SplashScreen.name,
         navController = navController
     ) {
-        composable(route = Routes.HOMESCREEN.name) {
-            val uiState by viewModelHome.uiState.collectAsState()
-            var visible by rememberSaveable { mutableStateOf(false) }
+        composable(route = Routes.SplashScreen.name) {
+            SplashScreen(
+                navigateToHomeScreen = { navController.navigate(Routes.HomeScreen.name) }
+            )
+        }
 
-            LaunchedEffect(key1 = Unit) {
-                delay(800L)
-                visible = true
-            }
+        composable(route = Routes.HomeScreen.name) {
+            val uiState by viewModelHome.uiState.collectAsState()
+
+            val scope = rememberCoroutineScope()
 
             HomeScreen(
-                visible = visible,
                 uiState = uiState,
                 navigateToDetailsWithArgs = { pokemon ->
                     val encodedUrl = Uri.encode(pokemon.image)
                     navController.navigate(
-                        route = Routes.DETAILSSCREEN.name +
+                        route = Routes.DetailsScreen.name +
                                 "/${pokemon._id}/${pokemon.name}/${pokemon.description}" +
                                 "/${pokemon.type}/${pokemon.category}/${pokemon.height}" +
                                 "/${pokemon.weight}/${encodedUrl}/${pokemon.color}"
                     )
                 },
-                navigateToUpsert = { navController.navigate(Routes.UPSERTSCREEN.name) }
-            )
+                navigateToUpsert = { navController.navigate(Routes.UpsertScreen.name) }
+            ) {
+                scope.launch {
+                    viewModelHome.setSearchValue(value = it)
+                    delay(1000L)
+                    viewModelHome.getPokemonByName(name = uiState.searchState)
+                }
+            }
         }
 
         composable(
-            route = "${Routes.DETAILSSCREEN.name}/{id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
+            route = "${Routes.DetailsScreen.name}/{id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType
@@ -94,7 +100,6 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
             )
         ) { backStack ->
             val viewModel: DetailsViewModel = hiltViewModel()
-            val uiState by viewModel.uiState.collectAsState()
 
             val id = backStack.arguments?.getString("id")
             val name = backStack.arguments?.getString("name")
@@ -118,17 +123,9 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                 color = color!!
             )
 
-            var visible by remember { mutableStateOf(false) }
-
-            LaunchedEffect(key1 = Unit) {
-                delay(200L)
-                visible = true
-            }
-
             val context = LocalContext.current
 
             DetailsScreen(
-                visible = visible,
                 pokemon = pokemon,
                 onDeletePressed = {
                     viewModel.removePokemon(
@@ -156,7 +153,7 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                 onUpdatePressed = {
                     val encodedUrl = Uri.encode(image)
                     navController.navigate(
-                        route = Routes.UPSERTSCREEN.name +
+                        route = Routes.UpsertScreen.name +
                                 "?/${id}/${name}/${description}/${type}/${category}/${height}/${weight}/${encodedUrl}/${color}"
                     )
                 },
@@ -165,7 +162,7 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
         }
 
         composable(
-            route = "${Routes.UPSERTSCREEN.name}?/{id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
+            route = "${Routes.UpsertScreen.name}?/{id}/{name}/{description}/{type}/{category}/{height}/{weight}/{image}/{color}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType
@@ -232,13 +229,6 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
 
             val context = LocalContext.current
 
-            var visible by remember { mutableStateOf(false) }
-
-            LaunchedEffect(key1 = Unit) {
-                delay(200L)
-                visible = true
-            }
-
             LaunchedEffect(key1 = Unit) {
                 if (!id.isNullOrBlank()) {
                     viewModel.setId(value = id)
@@ -254,16 +244,15 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
             }
 
             UpsertScreen(
-                visible = visible,
                 uiState = uiState,
-                onValueChangeName = { viewModel.setName(value = it) },
-                onValueChangeDes = { viewModel.setDescription(value = it) },
-                onValueChangeType = { viewModel.setType(value = it) },
-                onValueChangeCategory = { viewModel.setCategory(value = it) },
-                onValueChangeHeight = { viewModel.setHeight(value = it) },
-                onValueChangeWeight = { viewModel.setWeight(value = it) },
-                onValueChangeColor = { viewModel.setColor(value = it) },
-                onValueChangeImage = { viewModel.setImage(value = it) },
+                onValueChangeName = viewModel::setName,
+                onValueChangeDes = viewModel::setDescription,
+                onValueChangeType = viewModel::setType,
+                onValueChangeCategory = viewModel::setCategory,
+                onValueChangeHeight = viewModel::setHeight,
+                onValueChangeWeight = viewModel::setWeight,
+                onValueChangeColor = viewModel::setColor,
+                onValueChangeImage = viewModel::setImage,
                 onButtonPressed = {
                     if (pokemon._id != null) {
                         viewModel.updatePokemon(
@@ -275,7 +264,7 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                                     Toast.LENGTH_LONG
                                 ).show()
 
-                                navController.navigate(Routes.HOMESCREEN.name) {
+                                navController.navigate(Routes.HomeScreen.name) {
                                     navController.graph.findStartDestination().route?.let { route ->
                                         popUpTo(route)
                                     }
@@ -330,8 +319,9 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
                             ).show()
                         }
                     }
-                }
-            ) { navController.popBackStack() }
+                },
+                onBackPressed = { navController.popBackStack() }
+            )
         }
     }
 }

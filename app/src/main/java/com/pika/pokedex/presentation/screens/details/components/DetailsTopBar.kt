@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pika.pokedex.R
 import com.pika.pokedex.presentation.components.CardBubble
+import com.pika.pokedex.presentation.ui.theme.mPlus
 
 /**
  * Details TopBar composable for Details Screen
@@ -85,7 +86,7 @@ fun DetailsTopBar(
                 ),
                 painter = painterResource(id = R.drawable.delete),
                 tint = Color.White,
-                contentDescription = "Delete Pokemon"
+                contentDescription = stringResource(id = R.string.delete_pokemon)
             )
         }
 
@@ -102,12 +103,17 @@ fun DetailsTopBar(
                 animationSpec = tween(durationMillis = 350)
             )
         ) {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
                 Text(
                     text = name,
                     style = TextStyle(
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
+                        fontFamily = mPlus,
                         color = Color.White
                     )
                 )
@@ -119,6 +125,7 @@ fun DetailsTopBar(
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
+                        fontFamily = mPlus,
                         color = Color.White
                     )
                 )

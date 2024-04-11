@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pika.pokedex.R
+import com.pika.pokedex.presentation.ui.theme.mPlus
 
 /**
  * Upsert screen TopBar composable
@@ -61,6 +62,7 @@ fun UpsertTopBar(
             style = TextStyle(
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = mPlus,
                 color = Color.White
             ),
             textAlign = TextAlign.Center,

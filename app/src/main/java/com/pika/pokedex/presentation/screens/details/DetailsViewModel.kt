@@ -7,8 +7,6 @@ import com.pika.pokedex.data.repositories.Repository
 import com.pika.pokedex.domain.util.SuccessOrError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,8 +15,6 @@ import javax.inject.Inject
 class DetailsViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-    var uiState = MutableStateFlow(UiState())
-        private set
 
     /**
      * Function to delete Pokemon from API
@@ -33,7 +29,6 @@ class DetailsViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.removePokemon(id = id)
 
@@ -44,10 +39,8 @@ class DetailsViewModel @Inject constructor(
                         .child("$name.png")
                         .delete()
                     onSuccess()
-                    uiState.update { it.copy(loading = false) }
                 } else {
                     onError(result.e?.message.toString())
-                    uiState.update { it.copy(loading = false) }
                 }
             }
         }

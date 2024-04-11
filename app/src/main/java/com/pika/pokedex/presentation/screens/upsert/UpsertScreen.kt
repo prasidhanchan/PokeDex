@@ -10,19 +10,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pika.pokedex.domain.util.Constants.blue
+import com.pika.pokedex.domain.util.Constants.darkGray
+import com.pika.pokedex.domain.util.Constants.green
+import com.pika.pokedex.domain.util.Constants.peach
+import com.pika.pokedex.domain.util.Constants.red
+import com.pika.pokedex.domain.util.Constants.yellow
 import com.pika.pokedex.presentation.screens.upsert.componets.TextBoxListWithButton
 import com.pika.pokedex.presentation.screens.upsert.componets.ColorPalette
 import com.pika.pokedex.presentation.screens.upsert.componets.ImagePlaceHolder
 import com.pika.pokedex.presentation.screens.upsert.componets.UpsertTopBar
+import kotlinx.coroutines.delay
 
 @Composable
 fun UpsertScreen(
-    visible: Boolean,
+    visible: Boolean = false,
     uiState: UiState,
     onValueChangeName: (String) -> Unit,
     onValueChangeDes: (String) -> Unit,
@@ -44,15 +56,22 @@ fun UpsertScreen(
     }
 
     val colorList = listOf(
-        Color(0XFF00AFFF),
-        Color(0xFFFAD04D),
-        Color(0xFFF46565),
-        Color(0xFF48BA78),
-        Color(0xFFF08181),
-        Color(0XFF7A6D6D),
+        blue,
+        yellow,
+        red,
+        green,
+        peach,
+        darkGray,
     )
 
     val selectedColor = uiState.colorState.substring(2).toLong(16)
+
+    var isVisible by remember { mutableStateOf(visible) }
+
+    LaunchedEffect(key1 = Unit) {
+        delay(200L)
+        isVisible = true
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -76,7 +95,7 @@ fun UpsertScreen(
                 )
 
                 ImagePlaceHolder(
-                    visible = visible,
+                    visible = isVisible,
                     image = uiState.imageState,
                     onClick = {
                         galleryLauncher.launch(
@@ -86,7 +105,7 @@ fun UpsertScreen(
                 )
 
                 ColorPalette(
-                    visible = visible,
+                    visible = isVisible,
                     colorList = colorList,
                     selectedColor = Color(selectedColor),
                     onSelectColor = { color ->
@@ -96,7 +115,7 @@ fun UpsertScreen(
             }
 
             TextBoxListWithButton(
-                visible = visible,
+                visible = isVisible,
                 uiState = uiState,
                 onValueChangeName = onValueChangeName,
                 onValueChangeDes = onValueChangeDes,
@@ -124,6 +143,7 @@ private fun UpsertScreenPreview() {
         onValueChangeWeight = { },
         onValueChangeColor = { },
         onValueChangeImage = { },
-        onButtonPressed = { }
-    ) { }
+        onButtonPressed = { },
+        onBackPressed = { }
+    )
 }

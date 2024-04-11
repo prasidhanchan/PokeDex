@@ -1,13 +1,13 @@
 package com.pika.pokedex.data.repositories
 
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.pika.pokedex.data.remote.PokemonApi
 import com.pika.pokedex.domain.models.Content
 import com.pika.pokedex.domain.models.DataOrException
 import com.pika.pokedex.domain.models.Pokemon
 import com.pika.pokedex.domain.util.SuccessOrError
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -19,8 +19,38 @@ class Repository @Inject constructor(
 
         try {
             dataOrException.loading = true
-            dataOrException.data = pokemonApi.getAllPokemon()
+            val response = pokemonApi.getAllPokemon()
+
+            if (response.code() == 408) {
+                delay(1000L)
+                getAllPokemon()
+            }
+
+            if (response.isSuccessful) {
+                dataOrException.data = response.body()
+                dataOrException.loading = false
+            }
+        } catch (e: Exception) {
+            dataOrException.e = e
             dataOrException.loading = false
+        }
+        return dataOrException
+    }
+
+    suspend fun getPokemonByName(name: String): DataOrException<List<Pokemon>, Boolean, Exception> {
+        val dataOrException: DataOrException<List<Pokemon>, Boolean, Exception> = DataOrException()
+
+        try {
+            dataOrException.loading = true
+            val response = pokemonApi.getPokemonByName(name = name)
+
+            if (response.isSuccessful) {
+                dataOrException.data = response.body()
+                dataOrException.loading = false
+            } else if (response.code() == 404) {
+                dataOrException.data = emptyList()
+                dataOrException.loading = false
+            }
         } catch (e: Exception) {
             dataOrException.e = e
             dataOrException.loading = false
@@ -62,7 +92,6 @@ class Repository @Inject constructor(
                 dataOrException.data = SuccessOrError.SUCCESS
                 dataOrException.loading = false
             }
-            Log.d("UPDATTE", "updatePokemon: ${response.code()}")
         } catch (e: Exception) {
             dataOrException.e = e
             dataOrException.data = SuccessOrError.ERROR

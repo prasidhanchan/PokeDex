@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pika.pokedex.presentation.ui.theme.mPlus
 
 /**
  * Custom TextField composable for PokeDex
@@ -79,11 +80,13 @@ fun PokeTextBox(
                 text = placeHolder,
                 style = TextStyle(
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = mPlus
                 )
             )
         },
         singleLine = singleLine,
+        textStyle = TextStyle(fontFamily = mPlus),
         shape = RoundedCornerShape(15.dp)
     )
 

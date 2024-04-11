@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pika.pokedex.R
 import com.pika.pokedex.domain.util.Constants.gray
+import com.pika.pokedex.presentation.ui.theme.mPlus
 
 /**
  * PokeDex Dialog composable that displays a Alert Dialog
@@ -91,7 +92,8 @@ fun PokeDialog(
                         text = title,
                         style = TextStyle(
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = mPlus
                         )
                     )
 
@@ -101,7 +103,8 @@ fun PokeDialog(
                         text = subTitle,
                         style = TextStyle(
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = mPlus
                         )
                     )
 

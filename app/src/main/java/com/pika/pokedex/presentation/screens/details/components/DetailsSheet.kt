@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.pika.pokedex.R
 import com.pika.pokedex.domain.models.Pokemon
 import com.pika.pokedex.presentation.components.PokeButton
+import com.pika.pokedex.presentation.ui.theme.mPlus
 
 /**
  * Pokemon Bottom sheet composable to display the details of the selected Pokemon
@@ -80,7 +81,8 @@ fun DetailsSheet(
                         text = pokemon.description!!,
                         style = TextStyle(
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = mPlus
                         )
                     )
 
@@ -92,6 +94,7 @@ fun DetailsSheet(
                                 style = SpanStyle(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
+                                    fontFamily = mPlus,
                                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                                 )
                             ) {
@@ -101,7 +104,8 @@ fun DetailsSheet(
                             withStyle(
                                 style = SpanStyle(
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = mPlus
                                 )
                             ) {
                                 append(pokemon.category)
@@ -117,16 +121,18 @@ fun DetailsSheet(
                                 style = SpanStyle(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
+                                    fontFamily = mPlus,
                                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                                 )
                             ) {
                                 append(stringResource(R.string.height))
-                                append("            ")
+                                append("          ")
                             }
                             withStyle(
                                 style = SpanStyle(
                                     fontSize = 18.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = mPlus
                                 )
                             ) {
                                 append(pokemon.height)
@@ -142,23 +148,30 @@ fun DetailsSheet(
                                 style = SpanStyle(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
+                                    fontFamily = mPlus,
                                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                                 )
                             ) {
                                 append(stringResource(R.string.weight))
-                                append("           ")
+                                append("          ")
                             }
                             withStyle(
                                 style = SpanStyle(
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = mPlus
                                 )
                             ) {
-                                append(stringResource(id = R.string.weight_in_lbs, pokemon.weight!!))
+                                append(
+                                    stringResource(
+                                        id = R.string.weight_in_lbs,
+                                        pokemon.weight!!
+                                    )
+                                )
                             }
                         }
                     )
-                    
+
                     PokeButton(
                         modifier = Modifier
                             .padding(top = 20.dp)
@@ -168,6 +181,7 @@ fun DetailsSheet(
                         onClick = onUpdatePressed
                     )
                 }
+                
                 Text(
                     modifier = Modifier
                         .padding(vertical = 20.dp)
@@ -176,6 +190,7 @@ fun DetailsSheet(
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
+                        fontFamily = mPlus,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                     ),
                     textAlign = TextAlign.Center

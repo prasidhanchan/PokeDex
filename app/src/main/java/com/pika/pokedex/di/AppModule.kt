@@ -7,8 +7,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.time.Duration
 import javax.inject.Singleton
 
 @Module
@@ -20,6 +22,12 @@ object AppModule {
         return Retrofit.Builder()
             .baseUrl(BASEURL)
             .addConverterFactory(MoshiConverterFactory.create())
+            .client(
+                OkHttpClient.Builder()
+                    .readTimeout(duration = Duration.ofMinutes(2))
+                    .writeTimeout(duration = Duration.ofMinutes(2))
+                    .build()
+            )
             .build()
             .create(PokemonApi::class.java)
     }

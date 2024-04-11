@@ -21,6 +21,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.pika.pokedex.R
+import com.pika.pokedex.presentation.ui.theme.mPlus
+import kotlinx.coroutines.delay
 
 /**
  * Pokemon Card composable with different colors as per the pokemon
@@ -48,8 +55,8 @@ import com.pika.pokedex.R
 @Composable
 fun PokemonCard(
     modifier: Modifier = Modifier,
+    visible: Boolean = false,
     delay: Int,
-    visible: Boolean,
     name: String,
     image: String,
     type: String,
@@ -60,8 +67,15 @@ fun PokemonCard(
 ) {
     val colorLong = color.substring(2).toLong(16)
 
+    var isVisible by rememberSaveable { mutableStateOf(visible) }
+
+    LaunchedEffect(key1 = Unit) {
+        delay(200L)
+        isVisible = true
+    }
+
     AnimatedVisibility(
-        visible = visible,
+        visible = isVisible,
         enter = fadeIn(
             animationSpec = tween(
                 durationMillis = 1000,
@@ -113,27 +127,22 @@ fun PokemonCard(
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
+                                fontFamily = mPlus,
                                 color = Color.White
                             )
                         )
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        CardBubble(
-                            text = type
-                        )
+                        CardBubble(text = type)
 
                         Row(
                             modifier = Modifier.fillMaxHeight(),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start
                         ) {
-                            CardBubble(
-                                text = height
-                            )
-                            CardBubble(
-                                text = stringResource(R.string.weight_in_lbs, weight)
-                            )
+                            CardBubble(text = height)
+                            CardBubble(text = stringResource(R.string.weight_in_lbs, weight))
                         }
                     }
 
@@ -155,8 +164,8 @@ fun PokemonCard(
 @Composable
 private fun PokemonCardPreview() {
     PokemonCard(
-        delay = 100,
         visible = true,
+        delay = 100,
         name = "Bulbasaur",
         image = "",
         type = "Grass",
