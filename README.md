@@ -11,6 +11,7 @@ PokeDex displays all the Pokemon and their details from the REST API, built usin
 
 ## Screenshots
 
+<div style="text-align:center">
 <div>
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/1942451d-1e64-437f-984f-63b149b3b999" width="30%"  alt="Splash"/> <!-- Splash -->
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/c9ee9a13-eb89-4bb1-8bdb-7d36944a498c" width="30%"  alt="Loading"/> <!-- Loading -->
@@ -21,6 +22,7 @@ PokeDex displays all the Pokemon and their details from the REST API, built usin
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/ca591be1-612d-40e8-bfdf-a56c4ef28225" width="30%"  alt="Delete Pokemon"/> <!-- Delete Pokemon -->
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/e16d1ba2-2a08-4821-84cd-6ff50058156c" width="30%"  alt="Update Pokemon"/> <!-- Update Pokemon -->
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/97f0d844-85fa-4b64-a1dd-2ce69659c37d" width="30%"  alt="Search Pokemon"/> <!-- Search Pokemon -->
+</div>
 </div>
 
 ## Tech Stack
