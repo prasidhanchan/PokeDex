@@ -2,7 +2,6 @@
 
 <div align="center">
 <div>
-  ## Light Mode
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/c9ee9a13-eb89-4bb1-8bdb-7d36944a498c" width="30%" /> <!-- Loading -->
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/db07bdd9-27fa-4c6a-854f-0e1432839400" width="30%" /> <!-- Home -->
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/be379b2b-c5a5-4f17-be6e-a886aad3b0cc" width="30%" /> <!-- Details -->
