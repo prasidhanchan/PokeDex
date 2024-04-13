@@ -38,8 +38,8 @@ fun PokeDexNavigation(viewModelHome: HomeViewModel = hiltViewModel()) {
         composable(route = Routes.SplashScreen.name) {
             SplashScreen(
                 navigateToHomeScreen = {
-                    navController.navigate(Routes.HomeScreen.name)
                     navController.popBackStack()
+                    navController.navigate(Routes.HomeScreen.name)
                 }
             )
         }
