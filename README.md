@@ -1,5 +1,7 @@
 # PokeDex
 
+PokeDex displays all the Pokemon and their details from the REST API, built using Compose along with the Clean architecture and MVVM.
+
 ## Features
 
 - Clean architecture.
