@@ -11,7 +11,7 @@ PokeDex displays all the Pokemon and their details from the REST API, built usin
 
 ## Screenshots
 
-<div style="text-align:center">
+<div align="center">
 <div>
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/1942451d-1e64-437f-984f-63b149b3b999" width="30%"  alt="Splash"/> <!-- Splash -->
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/c9ee9a13-eb89-4bb1-8bdb-7d36944a498c" width="30%"  alt="Loading"/> <!-- Loading -->
