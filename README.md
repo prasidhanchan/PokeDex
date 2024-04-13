@@ -1,3 +1,12 @@
+# PokeDex
+
+## Features
+
+- Clean architecture.
+- Supports Dark and Light Mode.
+- Displays all the Pokemon available on the [REST API](https://github.com/prasidhanchan/pokedex-api).
+- User friendly interactive UI.
+
 ## Screenshots
 
 <div align="center">
@@ -13,3 +22,12 @@
 <img src="https://github.com/prasidhanchan/PokeDex/assets/92362239/97f0d844-85fa-4b64-a1dd-2ce69659c37d" width="30%" /> <!-- Search Pokemon -->
 </div>
 </div>
+
+## Tech Stack
+
+- Jetpack Compose
+- Coil - Image loading
+- Retrofit - Network calls
+- Moshi - JSON parsing
+- Hilt - Dependency Injection
+- Firebase storage - Image URL
