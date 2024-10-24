@@ -1,6 +1,7 @@
 package com.pika.pokedex.data.repositories
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.pika.pokedex.data.remote.PokemonApi
 import com.pika.pokedex.domain.models.Content
@@ -20,6 +21,7 @@ class Repository @Inject constructor(
         try {
             dataOrException.loading = true
             val response = pokemonApi.getAllPokemon()
+            Log.d("DATTAA", "getAllPokemon: ${response.code()}")
 
             if (response.code() == 408) {
                 delay(1000L)
@@ -28,6 +30,7 @@ class Repository @Inject constructor(
 
             if (response.isSuccessful) {
                 dataOrException.data = response.body()
+                Log.d("DATTAA", "getAllPokemon: ${dataOrException.data}")
                 dataOrException.loading = false
             }
         } catch (e: Exception) {

@@ -9,7 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import java.time.Duration
 import javax.inject.Singleton
 
@@ -21,7 +21,7 @@ object AppModule {
     fun providePokemonApi(): PokemonApi {
         return Retrofit.Builder()
             .baseUrl(BASEURL)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .client(
                 OkHttpClient.Builder()
                     .readTimeout(duration = Duration.ofMinutes(2))
