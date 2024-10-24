@@ -19,7 +19,7 @@ coilCompose = "2.7.0"
 [libraries]
 # Retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
-moshi-converter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofitVersion" }
+gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitVersion" }
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }

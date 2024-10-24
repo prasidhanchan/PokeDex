@@ -63,7 +63,7 @@ dependencies {
 
     // Retrofit
     implementation(libs.retrofit)
-    implementation(libs.moshi.converter)
+    implementation(libs.gson.converter)
 
     // Firebase storage
     implementation(platform(libs.firebase.bom))
