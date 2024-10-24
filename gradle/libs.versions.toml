@@ -23,7 +23,6 @@ gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
-google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
